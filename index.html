@@ -170,9 +170,7 @@ Find Route
 <div id="output"></div>
 
 </div>
-
 </div>
-
 </div>
 
 <script>
@@ -320,19 +318,6 @@ function buildPills(){
 const pills=document.getElementById("pills");
 pills.innerHTML="";
 
-for(const name of Object.keys(DATASETS")){}
-}
-</script>
-
-<script>
-
-/* Fixed pill builder */
-
-function buildPills(){
-
-const pills=document.getElementById("pills");
-pills.innerHTML="";
-
 Object.keys(DATASETS).forEach(name=>{
 
 const btn=document.createElement("button");
@@ -356,12 +341,11 @@ function populateNodes(){
 const list=document.getElementById("nodes");
 list.innerHTML="";
 
-Object.keys(DATASETS[current].graph)
-.forEach(node=>{
+Object.keys(DATASETS[current].graph).forEach(node=>{
 
-const o=document.createElement("option");
-o.value=node;
-list.appendChild(o);
+const option=document.createElement("option");
+option.value=node;
+list.appendChild(option);
 
 });
 }
@@ -374,15 +358,16 @@ function shortestPath(start,goal){
 
 const graph=DATASETS[current].graph;
 
-if(!graph[start] || !graph[goal])
+if(!graph[start] || !graph[goal]){
 return null;
+}
 
 const dist={};
 const prev={};
 const prevEdge={};
 
-Object.keys(graph).forEach(n=>{
-dist[n]=Infinity;
+Object.keys(graph).forEach(node=>{
+dist[node]=Infinity;
 });
 
 dist[start]=0;
@@ -395,8 +380,9 @@ queue.sort((a,b)=>dist[a]-dist[b]);
 
 const node=queue.shift();
 
-if(node===goal)
+if(node===goal){
 break;
+}
 
 for(const edge of graph[node]){
 
@@ -408,14 +394,16 @@ dist[edge.to]=alt;
 prev[edge.to]=node;
 prevEdge[edge.to]=edge;
 
-if(!queue.includes(edge.to))
+if(!queue.includes(edge.to)){
 queue.push(edge.to);
 }
 }
 }
+}
 
-if(dist[goal]===Infinity)
+if(dist[goal]===Infinity){
 return null;
+}
 
 const path=[];
 const edges=[];
@@ -423,7 +411,6 @@ const edges=[];
 let cur=goal;
 
 while(cur!==start){
-
 path.unshift(cur);
 edges.unshift(prevEdge[cur]);
 cur=prev[cur];
@@ -431,7 +418,7 @@ cur=prev[cur];
 
 path.unshift(start);
 
-return{
+return {
 cost:dist[goal],
 path,
 edges
@@ -444,8 +431,7 @@ edges
 
 function directions(route){
 
-const important=
-DATASETS[current].important;
+const important=DATASETS[current].important;
 
 const out=[];
 
@@ -469,13 +455,11 @@ currentRoad=edge.road;
 distance=edge.distance;
 toward=edge.toward;
 
-}
-else if(edge.road===currentRoad){
+}else if(edge.road===currentRoad){
 
 distance+=edge.distance;
 
-}
-else{
+}else{
 
 out.push({
 type:"road",
@@ -496,7 +480,6 @@ if(
 important.has(node) &&
 node!==route.path[route.path.length-1]
 ){
-
 out.push({
 type:"signpost",
 text:"📍 "+node
@@ -505,7 +488,6 @@ text:"📍 "+node
 }
 
 if(currentRoad){
-
 out.push({
 type:"road",
 text:`🛣 Follow ${currentRoad} toward ${toward} (${distance} km)`
@@ -526,17 +508,12 @@ return out;
 
 function findRoute(){
 
-const start=
-document.getElementById("start").value.trim();
+const start=document.getElementById("start").value.trim();
+const goal=document.getElementById("goal").value.trim();
 
-const goal=
-document.getElementById("goal").value.trim();
+const result=shortestPath(start,goal);
 
-const result=
-shortestPath(start,goal);
-
-const output=
-document.getElementById("output");
+const output=document.getElementById("output");
 
 if(!result){
 
@@ -546,26 +523,21 @@ output.innerHTML=
 return;
 }
 
-const steps=
-directions(result);
+const steps=directions(result);
 
 let html=`
-
 <div class="summary">
 <div class="distance">${result.cost} km</div>
 <div>${current}</div>
 </div>
-
 `;
 
 steps.forEach(step=>{
-
 html+=`
 <div class="step ${step.type}">
 ${step.text}
 </div>
 `;
-
 });
 
 html+=`
