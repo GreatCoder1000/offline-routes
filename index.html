@@ -127,29 +127,158 @@ button.find{
 .end{border-color:var(--red);}
 
 .rawpath{
-    margin-top:15px;
-    font-size:14px;
-    color:#666;
-    word-break:break-word;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Offline Route Planner</title>
 
-.error{
-    color:var(--red);
-    font-weight:bold;
-    margin-top:15px;
-}
-</style>
+    <style>
+        :root {
+            --blue: #0d6efd;
+            --green: #198754;
+            --orange: #fd7e14;
+            --red: #dc3545;
+            --purple: #6f42c1;
+            --bg: #eef2f7;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Segoe UI, Arial, sans-serif;
+            background: var(--bg);
+        }
+
+        .wrapper {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, .1);
+        }
+
+        .header {
+            background: var(--blue);
+            color: white;
+            padding: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .pills {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .pill {
+            border: none;
+            border-radius: 999px;
+            padding: 10px 18px;
+            cursor: pointer;
+            background: #dbe8ff;
+            color: #1149c6;
+        }
+
+        .pill.active {
+            background: var(--blue);
+            color: white;
+        }
+
+        label {
+            display: block;
+            margin-top: 12px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        button.find {
+            width: 100%;
+            margin-top: 16px;
+            border: none;
+            background: var(--green);
+            color: white;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .summary {
+            background: var(--blue);
+            color: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 14px;
+        }
+
+        .distance {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .step {
+            margin-top: 10px;
+            padding: 12px;
+            border-left: 5px solid #ccc;
+            background: #fafafa;
+            border-radius: 6px;
+        }
+
+        .start { border-color: var(--green); }
+        .road { border-color: var(--blue); }
+        .change { border-color: var(--orange); }
+        .signpost { border-color: var(--purple); }
+        .end { border-color: var(--red); }
+
+        .rawpath {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+            word-break: break-word;
+        }
+
+        .error {
+            color: var(--red);
+            font-weight: bold;
+            margin-top: 15px;
+        }
+    </style>
 </head>
 <body>
 
 <div class="wrapper">
+    <div class="card">
+        <div class="header">
+            <h1>Offline Route Planner</h1>
+            <div>Roads, Railways, Custom Networks</div>
+        </div>
+        <div class="content">
 
-<div class="card">
-
-<div class="header">
-<h1>Offline Route Planner</h1>
-<div>Roads, Railways, Custom Networks</div>
-</div>
 
 <div class="content">
 
@@ -376,6 +505,127 @@ function shortestPath(start, goal) {
 
     path.unshift(start); // Add start to the path
 
+        <div class="content">
+            <div id="pills" class="pills"></div>
+
+            <label>Start</label>
+            <input id="start" list="nodes">
+
+            <label>Goal</label>
+            <input id="goal" list="nodes">
+
+            <datalist id="nodes"></datalist>
+
+            <button class="find" onclick="findRoute()">
+                Find Route
+            </button>
+
+            <div id="output"></div>
+        </div>
+    </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+let current = "Kerala Roads";
+
+/***********************
+ UI
+************************/
+
+function buildPills() {
+    const pills = document.getElementById("pills");
+    pills.innerHTML = "";
+
+    Object.keys(DATASETS).forEach(name => {
+        const btn = document.createElement("button");
+        btn.className = "pill" + (name === current ? " active" : "");
+        btn.textContent = name;
+
+        btn.onclick = () => {
+            current = name;
+            buildPills();
+            populateNodes();
+        };
+
+        pills.appendChild(btn);
+    });
+}
+
+function populateNodes() {
+    const list = document.getElementById("nodes");
+    list.innerHTML = "";
+
+    Object.keys(DATASETS[current].graph).forEach(node => {
+        const option = document.createElement("option");
+        option.value = node;
+        list.appendChild(option);
+    });
+}
+
+/***********************
+ DIJKSTRA
+************************/
+
+function shortestPath(start, goal) {
+    const graph = DATASETS[current].graph;
+
+    // Check if start or goal does not exist in the graph
+    if (!graph[start] || !graph[goal]) {
+        return null;
+    }
+
+    const dist = {};
+    const prev = {};
+    const prevEdge = {};
+
+    Object.keys(graph).forEach(node => {
+        dist[node] = Infinity;
+        prev[node] = null;
+    });
+
+    dist[start] = 0;
+    const queue = [start];
+
+    while (queue.length) {
+        queue.sort((a, b) => dist[a] - dist[b]); // Sort the queue based on distance
+        const node = queue.shift(); // Get the node with the smallest distance
+
+        // Stop loop if the reached the goal
+        if (node === goal) {
+            break;
+        }
+
+        for (const edge of graph[node]) {
+            const alt = dist[node] + edge.distance;
+            if (alt < dist[edge.to]) {
+                dist[edge.to] = alt;
+                prev[edge.to] = node;
+                prevEdge[edge.to] = edge;
+
+                if (!queue.includes(edge.to)) {
+                    queue.push(edge.to);
+                }
+            }
+        }
+    }
+
+    if (dist[goal] === Infinity) {
+        return null; // No route found
+    }
+
+    const path = [];
+    const edges = [];
+    let cur = goal;
+
+    while (cur !== start) {
+        path.unshift(cur);
+        edges.unshift(prevEdge[cur]);
+        cur = prev[cur];
+    }
+
+    path.unshift(start); // Add start to the path
+
     return {
         cost: dist[goal],
         path,
@@ -449,6 +699,7 @@ function directions(route) {
 
     return out;
 }
+
 /***********************
  FIND
 ************************/
@@ -457,7 +708,7 @@ function findRoute() {
     const start = document.getElementById("start").value.trim();
     const goal = document.getElementById("goal").value.trim();
 
-    // Check if start or goal input is empty
+    // Check if the start or goal input is empty
     if (!start || !goal) {
         const output = document.getElementById("output");
         output.innerHTML = '<div class="error">Please enter both start and goal locations.</div>';
@@ -504,6 +755,5 @@ function findRoute() {
 buildPills();
 populateNodes();
 </script>
-
 </body>
 </html>
