@@ -8,7 +8,9 @@ const DATASETS = {
 
         graph: {
             "Thiruvananthapuram Kesavadasapuram": [
-                { to: "Thiruvananthapuram Palayam", distance: 3, road: "PMG Road", toward: "Thampanoor" }
+                { to: "Thiruvananthapuram Palayam", distance: 3, road: "PMG Road", toward: "Thampanoor" },
+                { to: "Vembayam", distance: 15, road: "MC Road", toward: "Kottarakkara" },
+                { to: "Kazhakkoottam", distance: 10, road: "Kazhakkoottam Road", toward: "NH66" }
             ],
 
             "Thiruvananthapuram Palayam": [
@@ -22,7 +24,17 @@ const DATASETS = {
             ],
 
             "Thiruvananthapuram Airport": [
-                { to: "Thiruvananthapuram Palayam", distance: 4, road: "Palayam Airport Road", toward: "Palayam" }
+                { to: "Thiruvananthapuram Palayam", distance: 4, road: "Palayam Airport Road", toward: "Palayam" },
+                { to: "Kazhakkoottam", distance: 10, road: "NH66", toward: "Ernakulam" }
+            ],
+
+            "Vembayam": [
+                { to: "Thiruvananthapuram Kesavadasapuram", distance: 15, road: "MC Road", toward: "Thiruvananthapuram" }
+            ],
+
+            "Kazhakkoottam": [
+                { to: "Thiruvananthapuram Airport", distance: 10, road: "NH66", toward: "Kanyakumari" },
+                { to: "Thiruvananthapuram Kesavadasapuram", distance: 10, road: "Unnamed Road", toward: "Thiruvananthapuram" }
             ]
         }
     },
