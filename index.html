@@ -113,89 +113,588 @@ function shortestPath(start, goal){
 
         const current = frontier.shift();
 
-        if(current.node === goal){
-            return current;
-        }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Offline Route Planner</title>
 
-        if(
-            bestCost[current.node] !== undefined &&
-            current.cost > bestCost[current.node]
-        ){
-            continue;
-        }
-
-        bestCost[current.node] = current.cost;
-
-        const neighbors = graph[current.node] || [];
-
-        for(const edge of neighbors){
-
-            const newCost =
-                current.cost + edge.distance;
-
-            if(
-                bestCost[edge.to] === undefined ||
-                newCost < bestCost[edge.to]
-            ){
-
-                frontier.push({
-                    node: edge.to,
-                    cost: newCost,
-                    path: [...current.path, edge.to],
-                    roads: [
-                        ...current.roads,
-                        `${edge.road} (${edge.distance} km)`
-                    ]
-                });
-            }
-        }
-    }
-
-    return null;
+<style>
+:root{
+    --primary:#0d6efd;
+    --success:#198754;
+    --warning:#fd7e14;
+    --danger:#dc3545;
+    --purple:#6f42c1;
+    --bg:#eef3f8;
 }
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    background:var(--bg);
+    font-family:Segoe UI,Tahoma,sans-serif;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    border-radius:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    overflow:hidden;
+}
+
+.header{
+    background:var(--primary);
+    color:white;
+    padding:24px;
+}
+
+.header h1{
+    margin:0;
+    font-size:28px;
+}
+
+.pills{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:20px 0;
+}
+
+.pill{
+    border:none;
+    background:#dce7ff;
+    color:#1d4ed8;
+    padding:10px 18px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.pill.active{
+    background:var(--primary);
+    color:white;
+}
+
+.controls{
+    padding:20px;
+}
+
+label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:600;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    border:1px solid #ccc;
+    margin-bottom:15px;
+}
+
+button.route-btn{
+    width:100%;
+    border:none;
+    background:var(--success);
+    color:white;
+    font-size:16px;
+    padding:14px;
+    border-radius:12px;
+    cursor:pointer;
+}
+
+.summary{
+    background:var(--primary);
+    color:white;
+    padding:20px;
+}
+
+.distance{
+    font-size:36px;
+    font-weight:bold;
+}
+
+.steps{
+    padding:20px;
+}
+
+.step{
+    position:relative;
+    margin-left:18px;
+    padding:12px 15px;
+    border-left:4px solid #ccc;
+}
+
+.step::before{
+    content:"";
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:#999;
+    position:absolute;
+    left:-8px;
+    top:20px;
+}
+
+.start{
+    border-color:var(--success);
+}
+.start::before{
+    background:var(--success);
+}
+
+.end{
+    border-color:var(--danger);
+}
+.end::before{
+    background:var(--danger);
+}
+
+.road{
+    border-color:var(--primary);
+}
+.road::before{
+    background:var(--primary);
+}
+
+.change{
+    border-color:var(--warning);
+}
+.change::before{
+    background:var(--warning);
+}
+
+.important{
+    border-color:var(--purple);
+}
+.important::before{
+    background:var(--purple);
+}
+
+.small{
+    color:#666;
+    font-size:14px;
+}
+
+.hidden{
+    display:none;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<div class="header">
+<h1>Offline Route Planner</h1>
+<div>Roads, railways, custom graphs</div>
+</div>
+
+<div class="controls">
+
+<div class="pills" id="providerPills"></div>
+
+<label>Start</label>
+<input id="start" list="nodes">
+
+<label>Goal</label>
+<input id="goal" list="nodes">
+
+<datalist id="nodes"></datalist>
+
+<button class="route-btn" onclick="findRoute()">
+Find Route
+</button>
+
+</div>
+
+<div id="result" class="hidden">
+
+<div class="summary">
+<div class="distance" id="distanceText"></div>
+<div id="providerText"></div>
+</div>
+
+<div class="steps" id="steps"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* ==========================
+   DATASETS
+========================== */
+
+const DATASETS = {
+
+"Kerala Highways": {
+
+important: new Set([
+"Thiruvananthapuram",
+"Kollam",
+"Adoor",
+"Kottarakkara",
+"Chengannur",
+"Thiruvalla",
+"Changanassery",
+"Kottayam",
+"Ettumannoor",
+"Ernakulam",
+"Angamaly",
+"Thrissur"
+]),
+
+graph: {
+
+"Thiruvananthapuram":[
+{to:"Kollam",distance:65,road:"NH66",toward:"Ernakulam"}
+],
+
+"Kollam":[
+{to:"Thiruvananthapuram",distance:65,road:"NH66",toward:"TVM"},
+{to:"Kayamkulam",distance:42,road:"NH66",toward:"Ernakulam"}
+],
+
+"Kayamkulam":[
+{to:"Kollam",distance:42,road:"NH66",toward:"Kollam"},
+{to:"Ernakulam",distance:105,road:"NH66",toward:"Ernakulam"}
+],
+
+"Ernakulam":[
+{to:"Kayamkulam",distance:105,road:"NH66",toward:"Kayamkulam"},
+{to:"Angamaly",distance:45,road:"NH544",toward:"Angamaly"},
+{to:"Kottayam",distance:63,road:"MC Road",toward:"Kottayam"}
+],
+
+"Angamaly":[
+{to:"Ernakulam",distance:45,road:"NH544",toward:"Ernakulam"},
+{to:"Thrissur",distance:68,road:"NH544",toward:"Thrissur"}
+],
+
+"Thrissur":[
+{to:"Angamaly",distance:68,road:"NH544",toward:"Angamaly"}
+],
+
+"Kottayam":[
+{to:"Ernakulam",distance:63,road:"MC Road",toward:"Ernakulam"}
+]
+
+}
+
+},
+
+"Kerala Trains": {
+
+important:new Set([
+"Trivandrum",
+"Kollam",
+"Kayamkulam",
+"Ernakulam",
+"Thrissur"
+]),
+
+graph:{
+
+"Trivandrum":[
+{to:"Kollam",distance:65,road:"Rail",toward:"Ernakulam"}
+],
+
+"Kollam":[
+{to:"Trivandrum",distance:65,road:"Rail",toward:"TVM"},
+{to:"Kayamkulam",distance:36,road:"Rail",toward:"Ernakulam"}
+],
+
+"Kayamkulam":[
+{to:"Kollam",distance:36,road:"Rail",toward:"Kollam"},
+{to:"Ernakulam",distance:110,road:"Rail",toward:"Ernakulam"}
+],
+
+"Ernakulam":[
+{to:"Kayamkulam",distance:110,road:"Rail",toward:"Kayamkulam"},
+{to:"Thrissur",distance:75,road:"Rail",toward:"Thrissur"}
+],
+
+"Thrissur":[
+{to:"Ernakulam",distance:75,road:"Rail",toward:"Ernakulam"}
+]
+
+}
+
+},
+
+"Tamil Nadu Roads":{
+
+important:new Set([
+"Chennai",
+"Vellore",
+"Salem",
+"Coimbatore"
+]),
+
+graph:{
+
+"Chennai":[
+{to:"Vellore",distance:140,road:"NH48",toward:"Bengaluru"}
+],
+
+"Vellore":[
+{to:"Chennai",distance:140,road:"NH48",toward:"Chennai"},
+{to:"Salem",distance:180,road:"NH44",toward:"Madurai"}
+],
+
+"Salem":[
+{to:"Vellore",distance:180,road:"NH44",toward:"Chennai"},
+{to:"Coimbatore",distance:165,road:"NH544",toward:"Coimbatore"}
+],
+
+"Coimbatore":[
+{to:"Salem",distance:165,road:"NH544",toward:"Salem"}
+]
+
+}
+
+}
+
+};
+
+let currentDataset = "Kerala Highways";
+
+/* ==========================
+   UI
+========================== */
+
+function buildPills(){
+
+const pills=document.getElementById("providerPills");
+pills.innerHTML="";
+
+for(const name of Object.keys(DATASETS)){
+
+const btn=document.createElement("button");
+btn.className="pill";
+
+if(name===currentDataset)
+btn.classList.add("active");
+
+btn.innerText=name;
+
+btn.onclick=()=>{
+currentDataset=name;
+buildPills();
+populateNodes();
+};
+
+pills.appendChild(btn);
+}
+}
+
+function populateNodes(){
+
+const list=document.getElementById("nodes");
+list.innerHTML="";
+
+const graph=DATASETS[currentDataset].graph;
+
+Object.keys(graph).forEach(node=>{
+const option=document.createElement("option");
+option.value=node;
+list.appendChild(option);
+});
+}
+
+/* ==========================
+   UCS
+========================== */
+
+function shortestPath(start,goal){
+
+const graph=DATASETS[currentDataset].graph;
+
+const frontier=[{
+node:start,
+cost:0,
+path:[start],
+edges:[]
+}];
+
+const best={};
+
+while(frontier.length){
+
+frontier.sort((a,b)=>a.cost-b.cost);
+
+const current=frontier.shift();
+
+if(current.node===goal)
+return current;
+
+if(best[current.node]!==undefined &&
+current.cost>best[current.node])
+continue;
+
+best[current.node]=current.cost;
+
+for(const edge of (graph[current.node]||[])){
+
+const newCost=current.cost+edge.distance;
+
+frontier.push({
+node:edge.to,
+cost:newCost,
+path:[...current.path,edge.to],
+edges:[...current.edges,edge]
+});
+}
+}
+
+return null;
+}
+
+/* ==========================
+   DIRECTIONS
+========================== */
+
+function buildDirections(route){
+
+const important=DATASETS[currentDataset].important;
+
+const output=[];
+
+output.push({
+type:"start",
+text:"🚩 Start at " + route.path[0]
+});
+
+let currentRoad=null;
+let currentDistance=0;
+let currentToward="";
+
+for(let i=0;i<route.edges.length;i++){
+
+const edge=route.edges[i];
+const node=route.path[i+1];
+
+if(currentRoad===null){
+
+currentRoad=edge.road;
+currentDistance=edge.distance;
+currentToward=edge.toward;
+}
+else if(edge.road===currentRoad){
+
+currentDistance+=edge.distance;
+}
+else{
+
+output.push({
+type:"road",
+text:`🛣 Follow ${currentRoad} toward ${currentToward} (${currentDistance} km)`
+});
+
+output.push({
+type:"change",
+text:`↗ At ${route.path[i]} take ${edge.road} toward ${edge.toward}`
+});
+
+currentRoad=edge.road;
+currentDistance=edge.distance;
+currentToward=edge.toward;
+}
+
+if(
+important.has(node) &&
+node!==route.path[route.path.length-1]
+){
+
+output.push({
+type:"important",
+text:`📍 ${node}`
+});
+}
+}
+
+if(currentRoad){
+
+output.push({
+type:"road",
+text:`🛣 Follow ${currentRoad} toward ${currentToward} (${currentDistance} km)`
+});
+}
+
+output.push({
+type:"end",
+text:"🏁 Arrive at " +
+route.path[route.path.length-1]
+});
+
+return output;
+}
+
+/* ==========================
+   FIND ROUTE
+========================== */
 
 function findRoute(){
 
-    const start =
-        document.getElementById("start").value.trim();
+const start=document.getElementById("start").value.trim();
+const goal=document.getElementById("goal").value.trim();
 
-    const goal =
-        document.getElementById("goal").value.trim();
+const result=shortestPath(start,goal);
 
-    const result =
-        shortestPath(start, goal);
+if(!result){
 
-    const div =
-        document.getElementById("result");
-
-    if(!result){
-        div.innerHTML =
-            "<b>No route found.</b>";
-        return;
-    }
-
-    let html = "";
-
-    html += "<h3>Route Found</h3>";
-
-    html += "<b>Path:</b><br>";
-    html += result.path.join(" → ");
-
-    html += "<br><br>";
-
-    html += "<b>Road Segments:</b><br><ul>";
-
-    for(const r of result.roads){
-        html += `<li>${r}</li>`;
-    }
-
-    html += "</ul>";
-
-    html +=
-        `<b>Total Distance:</b> ${result.cost} km`;
-
-    div.innerHTML = html;
+alert("No route found");
+return;
 }
+
+document.getElementById("result")
+.classList.remove("hidden");
+
+document.getElementById("distanceText")
+.innerText=result.cost+" km";
+
+document.getElementById("providerText")
+.innerText=currentDataset;
+
+const steps=document.getElementById("steps");
+steps.innerHTML="";
+
+const directions=buildDirections(result);
+
+directions.forEach(item=>{
+
+const div=document.createElement("div");
+div.className="step " + item.type;
+div.innerHTML=item.text;
+steps.appendChild(div);
+
+});
+}
+
+/* ==========================
+   INIT
+========================== */
+
+buildPills();
+populateNodes();
 
 </script>
 
