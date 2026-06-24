@@ -12,7 +12,7 @@ const DATASETS = {
             ],
 
             "Thiruvananthapuram Palayam": [
-                { to: "Thiruvananthapuram Kesavadasapuram:, distance: 3, road: "PMG Road", toward: "MC Road" },
+                { to: "Thiruvananthapuram Kesavadasapuram, distance: 3, road: "PMG Road", toward: "MC Road" },
                 { to: "Thiruvananthapuram", distance: 3, road: "MG Road", toward: "Vazhuthacaud" },
                 { to: "Thiruvananthapuram Airport", distance: 4, road: "Palayam Airport Road", toward: "TRV Intl Airport" }
             ],
