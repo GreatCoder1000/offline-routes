@@ -276,100 +276,178 @@ return null;
 }
 
 const path=[];
-const edges=[];
+let current = "Kerala Roads";
 
-let cur=goal;
+/***********************
+ UI
+************************/
 
-while(cur!==start){
-path.unshift(cur);
-edges.unshift(prevEdge[cur]);
-cur=prev[cur];
+function buildPills() {
+    const pills = document.getElementById("pills");
+    pills.innerHTML = "";
+
+    Object.keys(DATASETS).forEach(name => {
+        const btn = document.createElement("button");
+        btn.className = "pill" + (name === current ? " active" : "");
+        btn.textContent = name;
+
+        btn.onclick = () => {
+            current = name;
+            buildPills();
+            populateNodes();
+        };
+
+        pills.appendChild(btn);
+    });
 }
 
-path.unshift(start);
+function populateNodes() {
+    const list = document.getElementById("nodes");
+    list.innerHTML = "";
 
-return {
-cost:dist[goal],
-path,
-edges
-};
+    Object.keys(DATASETS[current].graph).forEach(node => {
+        const option = document.createElement("option");
+        option.value = node;
+        list.appendChild(option);
+    });
+}
+
+/***********************
+ DIJKSTRA
+************************/
+
+function shortestPath(start, goal) {
+    const graph = DATASETS[current].graph;
+
+    // Check if start or goal does not exist in the graph
+    if (!graph[start] || !graph[goal]) {
+        return null;
+    }
+
+    const dist = {};
+    const prev = {};
+    const prevEdge = {};
+
+    Object.keys(graph).forEach(node => {
+        dist[node] = Infinity;
+        prev[node] = null;
+    });
+
+    dist[start] = 0;
+    const queue = [start];
+
+    while (queue.length) {
+        queue.sort((a, b) => dist[a] - dist[b]); // Sort the queue based on distance
+        const node = queue.shift(); // Get the node with the smallest distance
+
+        // Stop loop if the reached the goal
+        if (node === goal) {
+            break;
+        }
+
+        for (const edge of graph[node]) {
+            const alt = dist[node] + edge.distance;
+
+            if (alt < dist[edge.to]) {
+                dist[edge.to] = alt;
+                prev[edge.to] = node;
+                prevEdge[edge.to] = edge;
+
+                if (!queue.includes(edge.to)) {
+                    queue.push(edge.to);
+                }
+            }
+        }
+    }
+
+    if (dist[goal] === Infinity) {
+        return null; // No route found
+    }
+
+    const path = [];
+    const edges = [];
+    let cur = goal;
+
+    while (cur !== start) {
+        path.unshift(cur);
+        edges.unshift(prevEdge[cur]);
+        cur = prev[cur];
+    }
+
+    path.unshift(start); // Add start to the path
+
+    return {
+        cost: dist[goal],
+        path,
+        edges
+    };
 }
 
 /***********************
  DIRECTIONS
 ************************/
 
-function directions(route){
+function directions(route) {
+    const important = DATASETS[current].important;
 
-const important=DATASETS[current].important;
+    const out = [];
 
-const out=[];
+    out.push({
+        type: "start",
+        text: "🚩 Start at " + route.path[0]
+    });
 
-out.push({
-type:"start",
-text:"🚩 Start at "+route.path[0]
-});
+    let currentRoad = null;
+    let distance = 0;
+    let toward = "";
 
-let currentRoad=null;
-let distance=0;
-let toward="";
+    for (let i = 0; i < route.edges.length; i++) {
+        const edge = route.edges[i];
+        const node = route.path[i + 1];
 
-for(let i=0;i<route.edges.length;i++){
+        if (currentRoad === null) {
+            currentRoad = edge.road;
+            distance = edge.distance;
+            toward = edge.toward;
+        } else if (edge.road === currentRoad) {
+            distance += edge.distance;
+        } else {
+            out.push({
+                type: "road",
+                text: `🛣 Follow currentRoadtoward{currentRoad} towardcurrentRoadtoward{toward} (${distance} km)`
+            });
 
-const edge=route.edges[i];
-const node=route.path[i+1];
+            out.push({
+                type: "change",
+                text: `↗ At route.path[i]take{route.path[i]} takeroute.path[i]take{edge.road} toward ${edge.toward}`
+            });
 
-if(currentRoad===null){
+            currentRoad = edge.road;
+            distance = edge.distance;
+            toward = edge.toward;
+        }
 
-currentRoad=edge.road;
-distance=edge.distance;
-toward=edge.toward;
+        if (important.has(node) && node !== route.path[route.path.length - 1]) {
+            out.push({
+                type: "signpost",
+                text: "📍 " + node
+            });
+        }
+    }
 
-}else if(edge.road===currentRoad){
+    if (currentRoad) {
+        out.push({
+            type: "road",
+            text: `🛣 Follow currentRoadtoward{currentRoad} towardcurrentRoadtoward{toward} (${distance} km)`
+        });
+    }
 
-distance+=edge.distance;
+    out.push({
+        type: "end",
+        text: "🏁 Arrive at " + route.path.at(-1)
+    });
 
-}else{
-
-out.push({
-type:"road",
-text:`🛣 Follow ${currentRoad} toward ${toward} (${distance} km)`
-});
-
-out.push({
-type:"change",
-text:`↗ At ${route.path[i]} take ${edge.road} toward ${edge.toward}`
-});
-
-currentRoad=edge.road;
-distance=edge.distance;
-toward=edge.toward;
-}
-
-if(
-important.has(node) &&
-node!==route.path[route.path.length-1]
-){
-out.push({
-type:"signpost",
-text:"📍 "+node
-});
-}
-}
-
-if(currentRoad){
-out.push({
-type:"road",
-text:`🛣 Follow ${currentRoad} toward ${toward} (${distance} km)`
-});
-}
-
-out.push({
-type:"end",
-text:"🏁 Arrive at "+route.path.at(-1)
-});
-
-return out;
+    return out;
 }
 
 /***********************
