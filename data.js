@@ -3,19 +3,7 @@ const DATASETS = {
     "Kerala Roads": {
 
         important: new Set([
-            "Thiruvananthapuram",
-            "Kollam",
-            "Kayamkulam",
-            "Adoor",
-            "Kottarakkara",
-            "Chengannur",
-            "Thiruvalla",
-            "Changanassery",
-            "Kottayam",
-            "Ettumannoor",
-            "Ernakulam",
-            "Angamaly",
-            "Thrissur"
+            "Thiruvananthapuram"
         ]),
 
         graph: {
