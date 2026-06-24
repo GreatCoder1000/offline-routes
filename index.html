@@ -449,58 +449,60 @@ function directions(route) {
 
     return out;
 }
-
 /***********************
  FIND
 ************************/
 
-function findRoute(){
+function findRoute() {
+    const start = document.getElementById("start").value.trim();
+    const goal = document.getElementById("goal").value.trim();
 
-const start=document.getElementById("start").value.trim();
-const goal=document.getElementById("goal").value.trim();
+    // Check if start or goal input is empty
+    if (!start || !goal) {
+        const output = document.getElementById("output");
+        output.innerHTML = '<div class="error">Please enter both start and goal locations.</div>';
+        return;
+    }
 
-const result=shortestPath(start,goal);
+    const result = shortestPath(start, goal);
+    const output = document.getElementById("output");
 
-const output=document.getElementById("output");
+    // Check if a valid route was found
+    if (!result) {
+        output.innerHTML = '<div class="error">No route found.</div>';
+        return;
+    }
 
-if(!result){
+    const steps = directions(result);
 
-output.innerHTML=
-'<div class="error">No route found.</div>';
+    let html = `
+    <div class="summary">
+        <div class="distance">${result.cost} km</div>
+        <div>${current}</div>
+    </div>
+    `;
 
-return;
+    steps.forEach(step => {
+        html += `
+        <div class="step ${step.type}">
+            ${step.text}
+        </div>
+        `;
+    });
+
+    html += `
+    <div class="rawpath">
+        <b>Raw Path:</b><br>
+        ${result.path.join(" → ")}
+    </div>
+    `;
+
+    output.innerHTML = html;
 }
 
-const steps=directions(result);
-
-let html=`
-<div class="summary">
-<div class="distance">${result.cost} km</div>
-<div>${current}</div>
-</div>
-`;
-
-steps.forEach(step=>{
-html+=`
-<div class="step ${step.type}">
-${step.text}
-</div>
-`;
-});
-
-html+=`
-<div class="rawpath">
-<b>Raw Path:</b><br>
-${result.path.join(" → ")}
-</div>
-`;
-
-output.innerHTML=html;
-}
-
+// Initialize the pills and node list on load
 buildPills();
 populateNodes();
-
 </script>
 
 </body>
