@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Kerala Highway Route Planner</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+input{
+    padding:8px;
+    margin:5px;
+}
+
+button{
+    padding:8px 15px;
+}
+
+#result{
+    margin-top:20px;
+    padding:15px;
+    border:1px solid #ccc;
+    background:#f8f8f8;
+}
+</style>
+</head>
+<body>
+
+<h2>Kerala State Highway Route Planner</h2>
+
+<label>Start:</label>
+<input id="start" value="Kochi">
+
+<label>Goal:</label>
+<input id="goal" value="Thiruvananthapuram">
+
+<button onclick="findRoute()">Find Route</button>
+
+<div id="result"></div>
+
+<script>
+
+// Graph:
+// node -> neighbor, distance, road
+
+const graph = {
+
+    Kochi: [
+        {to:"Aluva", distance:15, road:"NH66"},
+        {to:"Kottayam", distance:63, road:"MC Road"}
+    ],
+
+    Aluva: [
+        {to:"Kochi", distance:15, road:"NH66"},
+        {to:"Thrissur", distance:52, road:"NH544"}
+    ],
+
+    Thrissur: [
+        {to:"Aluva", distance:52, road:"NH544"},
+        {to:"Palakkad", distance:66, road:"NH544"},
+        {to:"Kozhikode", distance:117, road:"NH66"}
+    ],
+
+    Palakkad: [
+        {to:"Thrissur", distance:66, road:"NH544"}
+    ],
+
+    Kozhikode: [
+        {to:"Thrissur", distance:117, road:"NH66"},
+        {to:"Kannur", distance:90, road:"NH66"}
+    ],
+
+    Kannur: [
+        {to:"Kozhikode", distance:90, road:"NH66"}
+    ],
+
+    Kottayam: [
+        {to:"Kochi", distance:63, road:"MC Road"},
+        {to:"Pathanamthitta", distance:62, road:"MC Road"}
+    ],
+
+    Pathanamthitta: [
+        {to:"Kottayam", distance:62, road:"MC Road"},
+        {to:"Thiruvananthapuram", distance:107, road:"MC Road"}
+    ],
+
+    Thiruvananthapuram: [
+        {to:"Pathanamthitta", distance:107, road:"MC Road"}
+    ]
+};
+
+
+// Uniform Cost Search
+function shortestPath(start, goal){
+
+    const frontier = [{
+        node:start,
+        cost:0,
+        path:[start],
+        roads:[]
+    }];
+
+    const bestCost = {};
+
+    while(frontier.length > 0){
+
+        frontier.sort((a,b)=>a.cost-b.cost);
+
+        const current = frontier.shift();
+
+        if(current.node === goal){
+            return current;
+        }
+
+        if(
+            bestCost[current.node] !== undefined &&
+            current.cost > bestCost[current.node]
+        ){
+            continue;
+        }
+
+        bestCost[current.node] = current.cost;
+
+        const neighbors = graph[current.node] || [];
+
+        for(const edge of neighbors){
+
+            const newCost =
+                current.cost + edge.distance;
+
+            if(
+                bestCost[edge.to] === undefined ||
+                newCost < bestCost[edge.to]
+            ){
+
+                frontier.push({
+                    node: edge.to,
+                    cost: newCost,
+                    path: [...current.path, edge.to],
+                    roads: [
+                        ...current.roads,
+                        `${edge.road} (${edge.distance} km)`
+                    ]
+                });
+            }
+        }
+    }
+
+    return null;
+}
+
+function findRoute(){
+
+    const start =
+        document.getElementById("start").value.trim();
+
+    const goal =
+        document.getElementById("goal").value.trim();
+
+    const result =
+        shortestPath(start, goal);
+
+    const div =
+        document.getElementById("result");
+
+    if(!result){
+        div.innerHTML =
+            "<b>No route found.</b>";
+        return;
+    }
+
+    let html = "";
+
+    html += "<h3>Route Found</h3>";
+
+    html += "<b>Path:</b><br>";
+    html += result.path.join(" → ");
+
+    html += "<br><br>";
+
+    html += "<b>Road Segments:</b><br><ul>";
+
+    for(const r of result.roads){
+        html += `<li>${r}</li>`;
+    }
+
+    html += "</ul>";
+
+    html +=
+        `<b>Total Distance:</b> ${result.cost} km`;
+
+    div.innerHTML = html;
+}
+
+</script>
+
+</body>
+</html>
