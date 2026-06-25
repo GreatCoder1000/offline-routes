@@ -669,7 +669,7 @@ function directions(route) {
 
             out.push({
                 type: "change",
-                text: `↗ At route.path[i]take{route.path[i]} takeroute.path[i]take{edge.road} toward ${edge.toward}`
+                text: `↗ At ${route.path[i]} take ${edge.road} toward ${edge.toward}`
             });
 
             currentRoad = edge.road;
@@ -688,7 +688,7 @@ function directions(route) {
     if (currentRoad) {
         out.push({
             type: "road",
-            text: `🛣 Follow currentRoadtoward{currentRoad} towardcurrentRoadtoward{toward} (${distance} km)`
+            text: `🛣 Follow ${currentRoad} toward ${toward} (${distance} km)`
         });
     }
 
