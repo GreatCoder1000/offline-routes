@@ -508,6 +508,8 @@ function shortestPath(start, goal) {
         <div class="content">
             <div id="pills" class="pills"></div>
 
+            <div id="autoprice"></div>
+
             <label>Start</label>
             <input id="start" list="nodes">
 
@@ -749,6 +751,10 @@ function findRoute() {
     `;
 
     output.innerHTML = html;
+
+    const autoprice = document.getElementById("autoprice");
+    const price = Math.max(30,Math.ceil(result.cost) * 15 +15);
+    autoprice.textContent = `Price for 🛺 AUTO: approx ₹${price}`;
 }
 
 // Initialize the pills and node list on load
