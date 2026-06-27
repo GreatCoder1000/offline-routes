@@ -423,12 +423,29 @@ function findRoute() {
 
     // Calculate total time based on edges' speed
     result.edges.forEach(edge => {
-        const speed = edge.speed || 60; // Default speed to 60 km/h if not defined
+        const speed = edge.speed ?? 60; // Default speed to 60 km/h if not defined
         const time = (edge.distance / speed) * 60; // Convert hours to minutes
         totalTime += time;
     });
+    totalTime = Math.ceil(totalTime * 60);
 
-    output.innerHTML += `<div>Total travel time: ${(totalTime / 60).toFixed(2)} hours</div>`;
+    const seconds = Math.round((totalTime % 60)/5)*5;
+    totalTime -= seconds;
+    totalTime /= 60;
+    totalTime = Math.round(totalTime);
+
+    const minutes = totalTime % 60;
+    totalTime -= minutes;
+    totalTime /= 60;
+    totalTime = Math.round(totalTime);
+
+    const hours = totalTime;
+    
+    let totalTimeDisplay = seconds + " sec";
+    totalTimeDisplay =( minutes > 0 )? (minutes + " min"):""totalTimeDisplay;
+    totalTimeDisplay =( hours > 0 )? (hours + " h"):""totalTimeDisplay;
+
+    output.innerHTML += `<div>Approximated total travel time: ${totalTimeDisplay}</div>`;
 }
 
 // Initialize the pills and node list on load
