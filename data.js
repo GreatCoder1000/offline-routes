@@ -56,6 +56,11 @@ const DATASETS = {
                 { to: "Vazhuthacaud", distance: 2.0, road: "CV Raman Pillai Road", toward: "Nedumangad" }
             ],
 
+            "Thycaud Junction South": [
+                { to: "Thycaud Junction North", distance: 0.1, road: "CV Raman Pillai Road", toward: "Vellayambalam" },
+                { to: "Thampanoor Road Fork", distance: 0.3, road: "Residency Road Over Bridge", toward: "Ayurveda College Junction" }
+            ],
+
             "Vazhuthacaud": [
                 { to: "Thycaud Junction North", distance: 2.0, road: "CV Raman Pillai Road", toward: "Kanyakumari" },
                 { to: "Edappazhanji Junction", distance: 1.2, road: "Cotton Hill Road", toward: "Pallimukku" },
@@ -86,11 +91,12 @@ const DATASETS = {
 
             "Kowdiar": [
                 { to: "Vellayambalam", distance: 1.3, road: "Kowdiar Avenue", toward: "Thampanoor" },
-                { to: "Nedumangad", distance: 12, road: "SH2", toward: "Thenmala" }
+                { to: "Nedumangad", distance: 12, road: "SH2", toward: "Palode" }
             ],
 
             "Nedumangad": [
-                { to: "Kowdiar", distance: 12, road: "SH2", toward: "Thiruvananthapuram" }
+                { to: "Kowdiar", distance: 12, road: "SH2", toward: "Thiruvananthapuram" },
+                { to: "Pazhakutty", distance: 1.2, road: "SH2", toward: "Palode" }
             ],
 
             "LMS": [
@@ -103,6 +109,25 @@ const DATASETS = {
                 { to: "Kesavadasapuram", distance: 2.6, road: "PMG Road", toward: "Angamaly" },
                 { to: "LMS", distance: 0.3, road: "LMS Vellayambalam Road", toward: "Vellayambalam" },
                 { to: "Palayam", distance: 0.4, road: "PMG Road", toward: "Thampanoor" }
+            ],
+
+            "Pazhakutty": [
+                { to: "Nedumangad", distance: 1.2, road: "SH2", toward: "Thiruvananthapuram" },
+                { to: "Chullimanoor", distance: 5, road: "SH2", toward: "Palode" }
+            ],
+
+            "Chullimanoor": [
+                { to: "Pazhakutty", distance: 5, road: "SH2", toward: "Thiruvananthapuram" }
+                { to: "Nanniyode", distance: 8.4, road: "SH2", toward: "Palode" }
+            ],
+
+            "Nanniyode": [
+                { to: "Chullimanoor", distance: 8.4, road: "SH2", toward: "Thiruvananthapuram" },
+                { to: "Palode", distance: 3.1, road: "SH2", toward: "Thenmala" }
+            ],
+
+            "Palode": [
+                { to: "Nanniyode", distance: 3.1, road: "SH2", toward: "Thiruvananthapuram" }
             ]
                 
         }
