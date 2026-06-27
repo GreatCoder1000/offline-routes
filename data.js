@@ -29,6 +29,11 @@ const DATASETS = {
                 { to: "Kazhakkoottam", distance: 10, road: "NH66", toward: "Ernakulam" }
             ],
 
+                 
+            "Jagathy": [
+                { to: "Edappazhanji Junction", distance: 0.5, road: "Kochar Road", toward: "Sasthamangalam" }
+            ],
+
             "Vembayam": [
                 { to: "Thiruvananthapuram Kesavadasapuram", distance: 15, road: "MC Road", toward: "Thiruvananthapuram" }
             ],
@@ -74,13 +79,18 @@ const DATASETS = {
 
             "Vellayambalam": [
                 { to: "Sasthamangalam", distance: 0.5, road: "Vellayambalam - Sasthamangalam Road", toward: "Pangode" },
-                { to: "Vazhuthacaud", distance: 1.1, road: "CV Raman Pillai Road", toward: "Kanyakumari" }
+                { to: "Vazhuthacaud", distance: 1.1, road: "CV Raman Pillai Road", toward: "Kanyakumari" },
+                { to: "Kowdiar Avenue", distance: 1.3, road: "Kowdiar Avenue", toward: "Nedumangad" }
             ],
 
-            "Jagathy": [
-                { to: "Edappazhanji Junction", distance: 0.5, road: "Kochar Road", toward: "Sasthamangalam" }
+            "Kowdiar": [
+                { to: "Vellayambalam", distance: 1.3, road: "Kowdiar Avenue", toward: "Thampanoor" },
+                { to: "Nedumangad", distance: 12, road: "SH2", toward: "Thenmala" }
+            ],
+
+            "Nedumangad": [
+                { to: "Kowdiar", distance: 12, road: "SH2", toward: "Thiruvananthapuram" }
             ]
-                
         }
     },
 
