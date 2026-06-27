@@ -371,10 +371,12 @@ function directions(route) {
 function findRoute() {
     const start = document.getElementById("start").value.trim();
     const goal = document.getElementById("goal").value.trim();
+    const autoprice = document.getElementById("autoprice");
 
     if (!start || !goal) {
         const output = document.getElementById("output");
         output.innerHTML = '<div class="error">Please enter both start and goal locations.</div>';
+        autoprice.textContent = '';
         return;
     }
 
@@ -383,6 +385,7 @@ function findRoute() {
 
     if (!result) {
         output.innerHTML = '<div class="error">No route found.</div>';
+        autoprice.textContent = '';
         return;
     }
 
@@ -435,7 +438,6 @@ function findRoute() {
     output.innerHTML = html;
 
     // Calculate and display auto price
-    const autoprice = document.getElementById("autoprice");
     const price = Math.max(30, Math.ceil(result.cost) * 15 + 15);
     autoprice.innerHTML = `<div style="margin-top: 15px; font-weight: 600; color: var(--green);">Price for 🛺 AUTO: approx ₹${price}</div>`;
 }
