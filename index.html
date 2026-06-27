@@ -234,7 +234,7 @@ function populateNodes() {
  UTILITIES
 ************************/
 
-function distance(meters) {
+function ddisplay(meters) {
     if (meters == 0) return "0 m";
     if (meters < 6) return meters + " m";
     if (meters < 13) return "10 m";
@@ -358,7 +358,7 @@ function directions(route) {
         } else {
             out.push({
                 type: "road",
-                text: `🛣 Follow ${currentRoad}${toward ? ` toward ${toward}` : ""} (${distance} km)`
+                text: `🛣 Follow ${currentRoad}${toward ? ` toward ${toward}` : ""} (${ddisplay(distance)})`
             });
 
             out.push({
@@ -385,7 +385,7 @@ function directions(route) {
     if (currentRoad) {
         out.push({
             type: "road",
-            text: `🛣 Follow ${currentRoad}${toward ? ` toward ${toward}` : ""} (${distance} km)`
+            text: `🛣 Follow ${currentRoad}${toward ? ` toward ${toward}` : ""} (${ddisplay(distance)})`
         });
     }
 
@@ -426,7 +426,7 @@ function findRoute() {
     // Calculate total time BEFORE generating HTML
     let totalMinutes = 0;
     result.edges.forEach(edge => {
-        const speed = edge.speed || 60; // Default speed to 60 km/h if not defined
+        const speed = edge.speed || 60000; // Default speed to 60 km/h if not defined
         totalMinutes += (edge.distance / speed) * 60; // Convert to minutes
     });
 
@@ -448,7 +448,7 @@ function findRoute() {
     // Build HTML with correct time display
     let html = `
     <div class="summary">
-        <div class="distance">${result.cost} km</div>
+        <div class="distance">${ddisplay(result.cost)}</div>
         <div class="time">${totalTimeDisplay}</div>
         <div>Dataset: ${current}</div>
     </div>
