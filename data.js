@@ -92,7 +92,8 @@ const DATASETS = {
             "Vellayambalam": [
                 { to: "Sasthamangalam", distance: 0.5, road: "Vellayambalam - Sasthamangalam Road", toward: "Pangode" },
                 { to: "Vazhuthacaud", distance: 1.1, road: "CV Raman Pillai Road", toward: "Kanyakumari" },
-                { to: "Kowdiar", distance: 1.3, road: "Kowdiar Avenue", toward: "Nedumangad" }
+                { to: "Kowdiar", distance: 1.3, road: "Kowdiar Avenue", toward: "Nedumangad" },
+                { to: "LMS", distance: 1.3, road: "LMS Vellayambalam Road", toward: "Palayam" }
             ],
 
             "Kowdiar": [
