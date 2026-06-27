@@ -36,7 +36,13 @@ const DATASETS = {
             ],
 
             "Vembayam": [
-                { to: "Kesavadasapuram", distance: 15, road: "MC Road", toward: "Thiruvananthapuram" }
+                { to: "Nalanchira", distance: 12.8, road: "MC Road", toward: "Thiruvananthapuram" },
+                { to: "Pazhakutty", distance: 8, road: "SH47", toward: "" }
+            ],
+
+            "Nalanchira": [
+                { to: "Kesavadasapuram", distance: 2.2, road: "MC Road", toward: "Thiruvananthapuram" },
+                { to: "Vembayam", distance: 12.8, road: "MC Road", toward: "Angamaly" }
             ],
 
             "Kazhakkoottam": [
@@ -113,7 +119,8 @@ const DATASETS = {
 
             "Pazhakutty": [
                 { to: "Nedumangad", distance: 1.2, road: "SH2", toward: "Thiruvananthapuram" },
-                { to: "Chullimanoor", distance: 5, road: "SH2", toward: "Palode" }
+                { to: "Chullimanoor", distance: 5, road: "SH2", toward: "Palode" },
+                { to: "Vembayam", distance: 8, road: "SH47", toward: "" }
             ],
 
             "Chullimanoor": [
