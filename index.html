@@ -1,149 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Offline Route Planner</title>
+Apologies for that! Here’s the complete code with all styles, functionalities, and improvements, including the adjustments for the `.signpost` class and the rest of the HTML structure.
 
-<style>
-:root{
-    --blue:#0d6efd;
-    --green:#198754;
-    --orange:#fd7e14;
-    --red:#dc3545;
-    --purple:#6f42c1;
-    --bg:#eef2f7;
-}
+### Updated Code:
 
-*{
-    box-sizing:border-box;
-}
-
-body{
-    margin:0;
-    font-family:Segoe UI,Arial,sans-serif;
-    background:var(--bg);
-}
-
-.wrapper{
-    max-width:900px;
-    margin:auto;
-    padding:20px;
-}
-
-.card{
-    background:white;
-    border-radius:18px;
-    overflow:hidden;
-    box-shadow:0 8px 25px rgba(0,0,0,.1);
-}
-
-.header{
-    background:var(--blue);
-    color:white;
-    padding:20px;
-}
-
-.header h1{
-    margin:0;
-}
-
-.content{
-    padding:20px;
-}
-
-.pills{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-bottom:20px;
-}
-
-.pill{
-    border:none;
-    border-radius:999px;
-    padding:10px 18px;
-    cursor:pointer;
-    background:#dbe8ff;
-    color:#1149c6;
-}
-
-.pill.active{
-    background:var(--blue);
-    color:white;
-}
-
-label{
-    display:block;
-    margin-top:12px;
-    margin-bottom:6px;
-    font-weight:600;
-}
-
-.find{
-    background:linear-gradient(135deg,#16a34a,#22c55e);
-    border:none;
-    color:white;
-    font-size:17px;
-    font-weight:bold;
-    border-radius:14px;
-    padding:16px;
-    cursor:pointer;
-    transition:.25s;
-}
-
-.find:hover{
-    transform:translateY(-2px);
-    box-shadow:0 10px 25px rgba(34,197,94,.35);
-}
-
-.summary{
-    background:linear-gradient(135deg,#2563eb,#3b82f6);
-    color:white;
-    border-radius:18px;
-    padding:24px;
-    margin-top:25px;
-}
-
-.distance{
-    font-size:42px;
-    font-weight:700;
-}
-.step{
-    display:flex;
-    align-items:center;
-    gap:15px;
-    margin-top:14px;
-    padding:16px;
-    background:white;
-    border-radius:16px;
-    border-left:6px solid #0d6efd;
-    box-shadow:0 3px 10px rgba(0,0,0,.05);
-}
-
-.start{border-color:var(--green);}
-.road{border-color:var(--blue);}
-.change{border-color:var(--orange);}
-.signpost{border-color:var(--purple);}
-.end{border-color:var(--red);}
-
-.fare{
-    margin-top:20px;
-    padding:18px;
-    border-radius:16px;
-    background:#fff7e6;
-    color:#d97706;
-    font-size:20px;
-    font-weight:bold;
-    text-align:center;
-}
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Offline Route Planner</title>
-
     <style>
         :root {
             --blue: #0d6efd;
@@ -152,44 +17,45 @@ label{
             --red: #dc3545;
             --purple: #6f42c1;
             --bg: #eef2f7;
+            --text-color: #1f2937;
         }
 
         * {
             box-sizing: border-box;
         }
 
-        body{
-    margin:0;
-    font-family:Inter,Segoe UI,sans-serif;
-    background:#edf2f7;
-    color:#1f2937;
-}
-
-.card{
-    background:#fff;
-    border-radius:24px;
-    box-shadow:0 15px 40px rgba(0,0,0,.08);
-}
-
-.header{
-    background:linear-gradient(135deg,#0d6efd,#3b82f6);
-    color:white;
-    padding:28px;
-}
-
-.header h1{
-    font-size:30px;
-    margin:0;
-}
-
-.header div{
-    opacity:.9;
-}
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg);
+        }
 
         .wrapper {
             max-width: 900px;
             margin: auto;
             padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, .08);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--blue), #3b82f6);
+            color: white;
+            padding: 28px;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .header h1 {
+            font-size: 30px;
+            margin: 0;
+        }
+
+        .header div {
+            opacity: .9;
         }
 
         .content {
@@ -203,25 +69,26 @@ label{
             margin-bottom: 20px;
         }
 
-    .pill{
-    padding:12px 20px;
-    border:none;
-    border-radius:30px;
-    background:white;
-    color:#0d6efd;
-    border:2px solid #0d6efd;
-    transition:.25s;
-    font-weight:600;
-}
+        .pill {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px;
+            background: white;
+            color: var(--blue);
+            border: 2px solid var(--blue);
+            transition: .25s;
+            font-weight: 600;
+            cursor: pointer;
+        }
 
-.pill:hover{
-    transform:translateY(-2px);
-}
+        .pill:hover {
+            transform: translateY(-2px);
+        }
 
-.pill.active{
-    background:#0d6efd;
-    color:white;
-}
+        .pill.active {
+            background: var(--blue);
+            color: white;
+        }
 
         label {
             display: block;
@@ -232,9 +99,17 @@ label{
 
         input {
             width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #ccc;
+            padding: 14px 16px;
+            font-size: 16px;
+            border: 2px solid #dbe4ef;
+            border-radius: 14px;
+            transition: .25s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 5px rgba(13, 110, 253, .15);
         }
 
         button.find {
@@ -247,6 +122,11 @@ label{
             border-radius: 10px;
             font-size: 16px;
             cursor: pointer;
+            transition: background .25s;
+        }
+
+        button.find:hover {
+            background: #16b34a;
         }
 
         .summary {
@@ -257,24 +137,24 @@ label{
             border-radius: 14px;
         }
 
-        .distance {
+        .distance, .time {
             font-size: 32px;
             font-weight: bold;
+            display: inline-block;
         }
 
         .step {
             margin-top: 10px;
             padding: 12px;
-            border-left: 5px solid #ccc;
             background: #fafafa;
             border-radius: 6px;
         }
 
-        .start { border-color: var(--green); }
-        .road { border-color: var(--blue); }
-        .change { border-color: var(--orange); }
-        .signpost { border-color: var(--purple); }
-        .end { border-color: var(--red); }
+        .start { border-left: 5px solid var(--green); }
+        .road { border-left: 5px solid var(--blue); }
+        .change { border-left: 5px solid var(--orange); }
+        .signpost { border-left: 5px solid var(--purple); }
+        .end { border-left: 5px solid var(--red); }
 
         .rawpath {
             margin-top: 15px;
@@ -288,25 +168,11 @@ label{
             font-weight: bold;
             margin-top: 15px;
         }
-
-    
-input{
-    width:100%;
-    padding:14px 16px;
-    font-size:16px;
-    border:2px solid #dbe4ef;
-    border-radius:14px;
-    transition:.25s;
-}
-
-input:focus{
-    outline:none;
-    border-color:#0d6efd;
-    box-shadow:0 0 0 5px rgba(13,110,253,.15);
-}
-
     </style>
 </head>
+Certainly! Here’s the continuation of your HTML structure starting from the `<body>` element. This includes the main content for the "Offline Route Planner," including the JavaScript functionality for calculating the route, time, displaying the output, and ensuring everything is correctly set up.
+
+```html
 <body>
 
 <div class="wrapper">
@@ -316,238 +182,7 @@ input:focus{
             <div>Roads, Railways, Custom Networks</div>
         </div>
         <div class="content">
-
-
-<div class="content">
-
-<div id="pills" class="pills"></div>
-
-<label>Start</label>
-<input id="start" list="nodes">
-
-<label>Goal</label>
-<input id="goal" list="nodes">
-
-<datalist id="nodes"></datalist>
-
-<button class="find" onclick="findRoute()">
-Find Route
-</button>
-
-<div id="output"></div>
-<div id="autoprice"></div>
-
-</div>
-</div>
-</div>
-
-<script src="data.js"></script>
-    
-<script>
-
-let current="Kerala Roads";
-
-/***********************
- UI
-************************/
-
-function buildPills(){
-
-const pills=document.getElementById("pills");
-pills.innerHTML="";
-
-Object.keys(DATASETS).forEach(name=>{
-
-const btn=document.createElement("button");
-
-btn.className="pill"+(name===current?" active":"");
-btn.textContent=name;
-
-btn.onclick=()=>{
-current=name;
-buildPills();
-populateNodes();
-};
-
-pills.appendChild(btn);
-
-});
-}
-
-function populateNodes(){
-
-const list=document.getElementById("nodes");
-list.innerHTML="";
-
-Object.keys(DATASETS[current].graph).forEach(node=>{
-
-const option=document.createElement("option");
-option.value=node;
-list.appendChild(option);
-
-});
-}
-
-/***********************
- DIJKSTRA
-************************/
-
-function shortestPath(start,goal){
-
-const graph=DATASETS[current].graph;
-
-if(!graph[start] || !graph[goal]){
-return null;
-}
-
-const dist={};
-const prev={};
-const prevEdge={};
-
-Object.keys(graph).forEach(node=>{
-dist[node]=Infinity;
-});
-
-dist[start]=0;
-
-const queue=[start];
-
-while(queue.length){
-
-queue.sort((a,b)=>dist[a]-dist[b]);
-
-const node=queue.shift();
-
-if(node===goal){
-break;
-}
-
-for(const edge of graph[node]){
-
-const alt=dist[node]+edge.distance;
-
-if(alt<dist[edge.to]){
-
-dist[edge.to]=alt;
-prev[edge.to]=node;
-prevEdge[edge.to]=edge;
-
-if(!queue.includes(edge.to)){
-queue.push(edge.to);
-}
-}
-}
-}
-
-if(dist[goal]===Infinity){
-return null;
-}
-
-const path=[];
-let current = "Kerala Roads";
-
-/***********************
- UI
-************************/
-
-function buildPills() {
-    const pills = document.getElementById("pills");
-    pills.innerHTML = "";
-
-    Object.keys(DATASETS).forEach(name => {
-        const btn = document.createElement("button");
-        btn.className = "pill" + (name === current ? " active" : "");
-        btn.textContent = name;
-
-        btn.onclick = () => {
-            current = name;
-            buildPills();
-            populateNodes();
-        };
-
-        pills.appendChild(btn);
-    });
-}
-
-function populateNodes() {
-    const list = document.getElementById("nodes");
-    list.innerHTML = "";
-
-    Object.keys(DATASETS[current].graph).forEach(node => {
-        const option = document.createElement("option");
-        option.value = node;
-        list.appendChild(option);
-    });
-}
-
-/***********************
- DIJKSTRA
-************************/
-
-function shortestPath(start, goal) {
-    const graph = DATASETS[current].graph;
-
-    // Check if start or goal does not exist in the graph
-    if (!graph[start] || !graph[goal]) {
-        return null;
-    }
-
-    const dist = {};
-    const prev = {};
-    const prevEdge = {};
-
-    Object.keys(graph).forEach(node => {
-        dist[node] = Infinity;
-        prev[node] = null;
-    });
-
-    dist[start] = 0;
-    const queue = [start];
-
-    while (queue.length) {
-        queue.sort((a, b) => dist[a] - dist[b]); // Sort the queue based on distance
-        const node = queue.shift(); // Get the node with the smallest distance
-
-        // Stop loop if the reached the goal
-        if (node === goal) {
-            break;
-        }
-
-        for (const edge of graph[node]) {
-            const alt = dist[node] + edge.distance;
-
-            if (alt < dist[edge.to]) {
-                dist[edge.to] = alt;
-                prev[edge.to] = node;
-                prevEdge[edge.to] = edge;
-
-                if (!queue.includes(edge.to)) {
-                    queue.push(edge.to);
-                }
-            }
-        }
-    }
-
-    if (dist[goal] === Infinity) {
-        return null; // No route found
-    }
-
-    const path = [];
-    const edges = [];
-    let cur = goal;
-
-    while (cur !== start) {
-        path.unshift(cur);
-        edges.unshift(prevEdge[cur]);
-        cur = prev[cur];
-    }
-
-    path.unshift(start); // Add start to the path
-
-        <div class="content">
-            <div id="pills" class="pills"></div>
-
-            <div id="autoprice"></div>
+            <div class="pills" id="pills"></div>
 
             <label>Start</label>
             <input id="start" list="nodes">
@@ -557,11 +192,10 @@ function shortestPath(start, goal) {
 
             <datalist id="nodes"></datalist>
 
-            <button class="find" onclick="findRoute()">
-                Find Route
-            </button>
+            <button class="find" onclick="findRoute()">Find Route</button>
 
             <div id="output"></div>
+            <div id="autoprice"></div>
         </div>
     </div>
 </div>
@@ -611,7 +245,6 @@ function populateNodes() {
 function shortestPath(start, goal) {
     const graph = DATASETS[current].graph;
 
-    // Check if start or goal does not exist in the graph
     if (!graph[start] || !graph[goal]) {
         return null;
     }
@@ -629,16 +262,16 @@ function shortestPath(start, goal) {
     const queue = [start];
 
     while (queue.length) {
-        queue.sort((a, b) => dist[a] - dist[b]); // Sort the queue based on distance
-        const node = queue.shift(); // Get the node with the smallest distance
+        queue.sort((a, b) => dist[a] - dist[b]);
+        const node = queue.shift();
 
-        // Stop loop if the reached the goal
         if (node === goal) {
             break;
         }
 
         for (const edge of graph[node]) {
             const alt = dist[node] + edge.distance;
+
             if (alt < dist[edge.to]) {
                 dist[edge.to] = alt;
                 prev[edge.to] = node;
@@ -652,7 +285,7 @@ function shortestPath(start, goal) {
     }
 
     if (dist[goal] === Infinity) {
-        return null; // No route found
+        return null;
     }
 
     const path = [];
@@ -680,7 +313,6 @@ function shortestPath(start, goal) {
 
 function directions(route) {
     const important = DATASETS[current].important;
-
     const out = [];
 
     out.push({
@@ -720,7 +352,7 @@ function directions(route) {
 
         if (important.has(node) && node !== route.path[route.path.length - 1]) {
             out.push({
-                type: "signpost",
+                                type: "signpost",
                 text: "📍 " + node
             });
         }
@@ -729,7 +361,7 @@ function directions(route) {
     if (currentRoad) {
         out.push({
             type: "road",
-            text: `🛣 Follow ${currentRoad} toward ${toward} (${distance} km)`
+            text: `🛣 Follow currentRoadtoward{currentRoad} towardcurrentRoadtoward{toward} (${distance} km)`
         });
     }
 
@@ -766,11 +398,13 @@ function findRoute() {
     }
 
     const steps = directions(result);
+    let totalTime = 0; // Calculate total time for the route
 
     let html = `
     <div class="summary">
         <div class="distance">${result.cost} km</div>
-        <div>${current}</div>
+        <div class="time">${(totalTime / 60).toFixed(2)} hours</div>
+        <div>Dataset: ${current}</div>
     </div>
     `;
 
@@ -792,8 +426,17 @@ function findRoute() {
     output.innerHTML = html;
 
     const autoprice = document.getElementById("autoprice");
-    const price = Math.max(30,Math.ceil(result.cost) * 15 +15);
+    const price = Math.max(30, Math.ceil(result.cost) * 15 + 15);
     autoprice.textContent = `Price for 🛺 AUTO: approx ₹${price}`;
+
+    // Calculate total time based on edges' speed
+    result.edges.forEach(edge => {
+        const speed = edge.speed || 60; // Default speed to 60 km/h if not defined
+        const time = (edge.distance / speed) * 60; // Convert hours to minutes
+        totalTime += time;
+    });
+
+    output.innerHTML += `<div>Total travel time: ${(totalTime / 60).toFixed(2)} hours</div>`;
 }
 
 // Initialize the pills and node list on load
