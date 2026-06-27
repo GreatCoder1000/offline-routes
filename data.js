@@ -117,7 +117,7 @@ const DATASETS = {
             ],
 
             "Chullimanoor": [
-                { to: "Pazhakutty", distance: 5, road: "SH2", toward: "Thiruvananthapuram" }
+                { to: "Pazhakutty", distance: 5, road: "SH2", toward: "Thiruvananthapuram" },
                 { to: "Nanniyode", distance: 8.4, road: "SH2", toward: "Palode" }
             ],
 
