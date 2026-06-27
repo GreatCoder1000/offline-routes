@@ -231,6 +231,31 @@ function populateNodes() {
 }
 
 /***********************
+ UTILITIES
+************************/
+
+function distance(meters) {
+    if (meters == 0) return "0 m";
+    if (meters < 6) return meters + " m";
+    if (meters < 13) return "10 m";
+    if (meters < 21) return "16 m";
+    if (meters < 31) return "25 m";
+    if (meters < 48) return "36 m";
+    if (meters < 57) return "50 m";
+    if (meters < 72) return "64 m";
+    if (meters < 90) return "80 m";
+    if (meters < 112) return "100 m";
+    if (meters < 500) return Math.round(meters / 25) * 25 + " m";
+    if (meters < 1000) return Math.round(meters / 50) * 50 + " m";
+    let rounded;
+    if (meters < 2000) rounded= Math.round(meters / 50) * 50;
+    else if (meters < 50000) rounded= Math.round(meters / 100) * 100;
+    else if (meters < 200000) rounded= Math.round(meters / 500) * 500;
+    else rounded = Math.round(meters / 1000) * 1000;
+    return rounded / 1000 + " km";
+}
+
+/***********************
  DIJKSTRA
 ************************/
 
