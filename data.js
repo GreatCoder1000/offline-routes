@@ -7,20 +7,21 @@ const DATASETS = {
         ]),
 
         graph: {
-            "Thiruvananthapuram Kesavadasapuram": [
-                { to: "Thiruvananthapuram Palayam", distance: 3, road: "PMG Road", toward: "Thampanoor" },
+            "Kesavadasapuram": [
+                { to: "PMG", distance: 2.6, road: "PMG Road", toward: "Palayam" },
                 { to: "Vembayam", distance: 15, road: "MC Road", toward: "Kottarakkara" },
                 { to: "Kazhakkoottam", distance: 10, road: "Kazhakkoottam Road", toward: "NH66" }
             ],
 
-            "Thiruvananthapuram Palayam": [
-                { to: "Thiruvananthapuram Kesavadasapuram", distance: 3, road: "PMG Road", toward: "MC Road" },
+            "Palayam": [
+                { to: "PMG", distance: 0.4, road: "PMG Road", toward: "MC Road" },
                 { to: "Thiruvananthapuram", distance: 3, road: "MG Road", toward: "Vazhuthacaud" },
-                { to: "Thiruvananthapuram Airport", distance: 4, road: "Palayam Airport Road", toward: "TRV Intl Airport" }
+                { to: "Thiruvananthapuram Airport", distance: 4, road: "Palayam Airport Road", toward: "TRV Intl Airport" },
+                { to: "LMS", distance: 0.4, road: "MG Road", toward: "LMS Vellayambalam Road" }
             ],
 
             "Thiruvananthapuram": [
-                { to: "Thiruvananthapuram Palayam", distance: 3, road: "MG Road", toward: "MC Road" },
+                { to: "Palayam", distance: 3, road: "MG Road", toward: "MC Road" },
                 { to: "Thampanoor Road Fork", distance: 0.1, road: "Railway Station Road", toward: "Thycaud" }
             ],
 
@@ -35,12 +36,12 @@ const DATASETS = {
             ],
 
             "Vembayam": [
-                { to: "Thiruvananthapuram Kesavadasapuram", distance: 15, road: "MC Road", toward: "Thiruvananthapuram" }
+                { to: "Kesavadasapuram", distance: 15, road: "MC Road", toward: "Thiruvananthapuram" }
             ],
 
             "Kazhakkoottam": [
                 { to: "Thiruvananthapuram Airport", distance: 10, road: "NH66", toward: "Kanyakumari" },
-                { to: "Thiruvananthapuram Kesavadasapuram", distance: 10, road: "Unnamed Road", toward: "Thiruvananthapuram" }
+                { to: "Kesavadasapuram", distance: 10, road: "Unnamed Road", toward: "Thiruvananthapuram" }
             ],
 
             "Thampanoor Road Fork": [
@@ -80,7 +81,7 @@ const DATASETS = {
             "Vellayambalam": [
                 { to: "Sasthamangalam", distance: 0.5, road: "Vellayambalam - Sasthamangalam Road", toward: "Pangode" },
                 { to: "Vazhuthacaud", distance: 1.1, road: "CV Raman Pillai Road", toward: "Kanyakumari" },
-                { to: "Kowdiar Avenue", distance: 1.3, road: "Kowdiar Avenue", toward: "Nedumangad" }
+                { to: "Kowdiar", distance: 1.3, road: "Kowdiar Avenue", toward: "Nedumangad" }
             ],
 
             "Kowdiar": [
@@ -90,7 +91,20 @@ const DATASETS = {
 
             "Nedumangad": [
                 { to: "Kowdiar", distance: 12, road: "SH2", toward: "Thiruvananthapuram" }
+            ],
+
+            "LMS": [
+                { to: "Vellayambalam", distance: 1.3, road: "LMS Vellayambalam Road", toward: "Sasthamangalam" },
+                { to: "Palayam", distance: 0.4, road: "MG Road", toward: "Thampanoor" },
+                { to: "PMG", distance: 0.3, road: "LMS Vellayambalam Road", toward: "PMG" }
+            ],
+
+            "PMG": [
+                { to: "Kesavadasapuram", distance: 2.6, road: "PMG Road", toward: "Angamaly" },
+                { to: "LMS", distance: 0.3, road: "LMS Vellayambalam Road", toward: "Vellayambalam" },
+                { to: "Palayam", distance: 0.4, road: "PMG Road", toward: "Thampanoor" }
             ]
+                
         }
     },
 
