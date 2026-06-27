@@ -329,12 +329,12 @@ function directions(route) {
         } else {
             out.push({
                 type: "road",
-                text: `🛣 Follow ${currentRoad} toward ${toward} (${distance} km)`
+                text: `🛣 Follow currentRoadtoward{currentRoad} towardcurrentRoadtoward{toward} (${distance} km)`
             });
 
             out.push({
                 type: "change",
-                text: `↗ At ${route.path[i]} take ${edge.road} toward ${edge.toward}`
+                text: `↗ At route.path[i]take{route.path[i]} takeroute.path[i]take{edge.road} toward ${edge.toward}`
             });
 
             currentRoad = edge.road;
@@ -344,7 +344,7 @@ function directions(route) {
 
         if (important.has(node) && node !== route.path[route.path.length - 1]) {
             out.push({
-                                type: "signpost",
+                type: "signpost",
                 text: "📍 " + node
             });
         }
@@ -364,7 +364,6 @@ function directions(route) {
 
     return out;
 }
-
 /***********************
  FIND
 ************************/
@@ -373,7 +372,6 @@ function findRoute() {
     const start = document.getElementById("start").value.trim();
     const goal = document.getElementById("goal").value.trim();
 
-    // Check if the start or goal input is empty
     if (!start || !goal) {
         const output = document.getElementById("output");
         output.innerHTML = '<div class="error">Please enter both start and goal locations.</div>';
@@ -383,19 +381,38 @@ function findRoute() {
     const result = shortestPath(start, goal);
     const output = document.getElementById("output");
 
-    // Check if a valid route was found
     if (!result) {
         output.innerHTML = '<div class="error">No route found.</div>';
         return;
     }
 
-    const steps = directions(result);
-    let totalTime = 0; // Calculate total time for the route
+    // Calculate total time BEFORE generating HTML
+    let totalMinutes = 0;
+    result.edges.forEach(edge => {
+        const speed = edge.speed || 60; // Default speed to 60 km/h if not defined
+        totalMinutes += (edge.distance / speed) * 60; // Convert to minutes
+    });
 
+    // Format time display
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = Math.round(totalMinutes % 60);
+    const seconds = Math.round((totalMinutes * 60) % 60);
+
+    let timeDisplay = [];
+    if (hours > 0) timeDisplay.push(`${hours} h`);
+    if (minutes > 0) timeDisplay.push(`${minutes} min`);
+    if (seconds > 0 && hours === 0 && minutes === 0) timeDisplay.push(`${seconds} sec`);
+    
+    const totalTimeDisplay = timeDisplay.join(" ");
+
+    // Generate directions
+    const steps = directions(result);
+
+    // Build HTML with correct time display
     let html = `
     <div class="summary">
         <div class="distance">${result.cost} km</div>
-        <div class="time">${(totalTime / 60).toFixed(2)} hours</div>
+        <div class="time">${totalTimeDisplay}</div>
         <div>Dataset: ${current}</div>
     </div>
     `;
@@ -417,40 +434,16 @@ function findRoute() {
 
     output.innerHTML = html;
 
+    // Calculate and display auto price
     const autoprice = document.getElementById("autoprice");
     const price = Math.max(30, Math.ceil(result.cost) * 15 + 15);
-    autoprice.textContent = `Price for 🛺 AUTO: approx ₹${price}`;
-
-    // Calculate total time based on edges' speed
-    result.edges.forEach(edge => {
-        const speed = edge.speed ?? 60; // Default speed to 60 km/h if not defined
-        const time = (edge.distance / speed) * 60; // Convert hours to minutes
-        totalTime += time;
-    });
-    totalTime = Math.ceil(totalTime * 60);
-
-    const seconds = Math.round((totalTime % 60)/5)*5;
-    totalTime -= seconds;
-    totalTime /= 60;
-    totalTime = Math.round(totalTime);
-
-    const minutes = totalTime % 60;
-    totalTime -= minutes;
-    totalTime /= 60;
-    totalTime = Math.round(totalTime);
-
-    const hours = totalTime;
-    
-    let totalTimeDisplay = seconds + " sec";
-    totalTimeDisplay =( minutes > 0 )? (minutes + " min"):""totalTimeDisplay;
-    totalTimeDisplay =( hours > 0 )? (hours + " h"):""totalTimeDisplay;
-
-    output.innerHTML += `<div>Approximated total travel time: ${totalTimeDisplay}</div>`;
+    autoprice.innerHTML = `<div style="margin-top: 15px; font-weight: 600; color: var(--green);">Price for 🛺 AUTO: approx ₹${price}</div>`;
 }
 
 // Initialize the pills and node list on load
 buildPills();
 populateNodes();
+
 </script>
 </body>
 </html>
