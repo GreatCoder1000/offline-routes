@@ -9,7 +9,7 @@ const DATASETS = {
         graph: {
             "Kesavadasapuram": [
                 { to: "PMG", distance: 2.6, road: "PMG Road", toward: "Palayam" },
-                { to: "Vembayam", distance: 15, road: "MC Road", toward: "Kottarakkara" },
+                { to: "Nalanchira", distance: 2.2, road: "MC Road", toward: "Kottarakkara" },
                 { to: "Kazhakkoottam", distance: 10, road: "Kazhakkoottam Road", toward: "NH66" }
             ],
 
@@ -29,7 +29,6 @@ const DATASETS = {
                 { to: "Thiruvananthapuram Palayam", distance: 4, road: "Palayam Airport Road", toward: "Palayam" },
                 { to: "Kazhakkoottam", distance: 10, road: "NH66", toward: "Ernakulam" }
             ],
-
                  
             "Jagathy": [
                 { to: "Edappazhanji Junction", distance: 0.5, road: "Kochar Road", toward: "Sasthamangalam" }
