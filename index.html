@@ -297,10 +297,9 @@ function shortestPath(start, goal) {
         path,
         edges
     };
-}
-
+                    }
 /***********************
- DIRECTIONS
+ DIRECTION PILLS
 ************************/
 
 function directions(route) {
@@ -309,7 +308,7 @@ function directions(route) {
 
     out.push({
         type: "start",
-        text: "🚩 Start at " + route.path[0]
+        text: `🚩 Start at ${route.path[0]}`
     });
 
     let currentRoad = null;
@@ -323,29 +322,37 @@ function directions(route) {
         if (currentRoad === null) {
             currentRoad = edge.road;
             distance = edge.distance;
-            toward = edge.toward;
+            toward = edge.toward || "";
         } else if (edge.road === currentRoad) {
             distance += edge.distance;
+
+            // Update destination if provided
+            if (edge.toward) {
+                toward = edge.toward;
+            }
         } else {
             out.push({
                 type: "road",
-                text: `🛣 Follow ${currentRoad} ${toward ? ("toward " + toward) : ""}(${distance} km)`
+                text: `🛣 Follow ${currentRoad}${toward ? ` toward ${toward}` : ""} (${distance} km)`
             });
 
             out.push({
                 type: "change",
-                text: `↗ At ${route.path[i]} take ${edge.road}` + (edge.toward ? (" toward " + edge.toward) : "");
+                text: `↗ At ${route.path[i]} take ${edge.road}${edge.toward ? ` toward ${edge.toward}` : ""}`
             });
 
             currentRoad = edge.road;
             distance = edge.distance;
-            toward = edge.toward;
+            toward = edge.toward || "";
         }
 
-        if (important.has(node) && node !== route.path[route.path.length - 1]) {
+        if (
+            important.has(node) &&
+            node !== route.path[route.path.length - 1]
+        ) {
             out.push({
                 type: "signpost",
-                text: "📍 " + node
+                text: `📍 ${node}`
             });
         }
     }
@@ -353,17 +360,19 @@ function directions(route) {
     if (currentRoad) {
         out.push({
             type: "road",
-            text: `🛣 Follow ${currentRoad} ${toward ? ("toward " + toward) : ""}(${distance} km)`
+            text: `🛣 Follow ${currentRoad}${toward ? ` toward ${toward}` : ""} (${distance} km)`
         });
     }
 
     out.push({
         type: "end",
-        text: "🏁 Arrive at " + route.path.at(-1)
+        text: `🏁 Arrive at ${route.path.at(-1)}`
     });
 
     return out;
 }
+    
+
 /***********************
  FIND
 ************************/
