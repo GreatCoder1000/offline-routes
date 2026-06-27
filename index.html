@@ -472,7 +472,7 @@ function findRoute() {
     output.innerHTML = html;
 
     // Calculate and display auto price
-    const price = Math.max(30, Math.ceil(result.cost) * 15 + 15);
+    const price = Math.max(30, Math.ceil(result.cost / 100) * 1.5 + 15);
     autoprice.innerHTML = `<div style="margin-top: 15px; font-weight: 600; color: var(--green);">Price for 🛺 AUTO: approx ₹${price}</div>`;
 }
 
